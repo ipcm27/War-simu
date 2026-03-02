@@ -138,8 +138,8 @@ World state is persisted as a property graph:
 ```cypher
 // Relationships
 (Noxus)-[:ATTACKED {type: "airstrike", turn: 1}]->(Shurima)
-(noxus)-[:DEPENDS_ON {resource: "oil", volume: 0.6}]->(Shurima)
-(noxus)-[:THREATENED {instrument: "economic"}]->(Noxus)
+(Zaum)-[:DEPENDS_ON {resource: "oil", volume: 0.6}]->(Shurima)
+(Zaum)-[:THREATENED {instrument: "economic"}]->(Noxus)
 (Shurima)-[:REQUESTED_SUPPORT]->(noxus)
 
 // Query: who becomes vulnerable if Shurima falls?
