@@ -20,11 +20,10 @@ Each agent:
 
 | Country | Analogy | Role |
 |---|---|---|
-| **Valdoria** | Western superpower | Aggressor / initiator |
-| **Karath** | Middle Eastern theocracy | Target nation |
-| **Nexoria** | Eastern industrial giant | Strategic ally of Karath |
+| **Noxus** | Western superpower | Aggressor / initiator |
+| **Shurima** | Middle Eastern theocracy | Target nation |
+| **Zaum** | Eastern industrial giant | Strategic ally of Shurima |
 
-> Valdoria launches an attack on Karath. Nexoria — which depends on Karath for energy and uses Karath as a geopolitical buffer — must decide how to respond without triggering a full confrontation with Valdoria.
 
 ---
 
@@ -32,12 +31,12 @@ Each agent:
 
 ```
 ┌─────────────────────────────────────────┐
-│              LangGraph Orchestrator      │
+│              LangGraph Orchestrator     │
 │                                         │
-│  ┌──────────┐  ┌──────────┐  ┌───────┐ │
-│  │ Valdoria │  │  Karath  │  │Nexoria│ │
-│  │  Agent   │  │  Agent   │  │ Agent │ │
-│  └────┬─────┘  └────┬─────┘  └───┬───┘ │
+│  ┌──────────┐  ┌──────────┐  ┌───────┐  │
+│  │ Shurima  │  │  Noxus   │  │ Zaum  │  |
+│  │  Agent   │  │  Agent   │  │ Agent │  │
+│  └────┬─────┘  └────┬─────┘  └───┬───┘  │
 │       └─────────────┴────────────┘      │
 │                    │                    │
 │           ┌────────▼────────┐           │
@@ -59,9 +58,9 @@ Each agent:
 Each agent has an explicit **utility function**:
 
 ```python
-utility_nexoria = (
+utility_noxus = (
     oil_access      * 0.40 +
-    trade_with_valdoria * 0.30 +
+    trade_with_Noxus * 0.30 +
     regional_influence  * 0.30
 )
 ```
@@ -69,12 +68,12 @@ utility_nexoria = (
 Before acting, the agent reasons about what the **other agents will do** — not just what they did:
 
 ```
-Thought: "If I retaliate now, will Valdoria escalate or back down?
+Thought: "If I retaliate now, will Noxus escalate or back down?
           If I stay silent, will they read it as weakness?"
 
 Action: [cut_semiconductor_exports | diplomatic_statement | proxy_support | ...]
 
-Observation: "Valdoria market dropped 8%. Internal pressure increased."
+Observation: "Noxus market dropped 8%. Internal pressure increased."
 
 Thought: "Partially effective. Do I increase pressure or hold?"
 ```
@@ -138,19 +137,19 @@ World state is persisted as a property graph:
 
 ```cypher
 // Relationships
-(Valdoria)-[:ATTACKED {type: "airstrike", turn: 1}]->(Karath)
-(Nexoria)-[:DEPENDS_ON {resource: "oil", volume: 0.6}]->(Karath)
-(Nexoria)-[:THREATENED {instrument: "economic"}]->(Valdoria)
-(Karath)-[:REQUESTED_SUPPORT]->(Nexoria)
+(Noxus)-[:ATTACKED {type: "airstrike", turn: 1}]->(Shurima)
+(noxus)-[:DEPENDS_ON {resource: "oil", volume: 0.6}]->(Shurima)
+(noxus)-[:THREATENED {instrument: "economic"}]->(Noxus)
+(Shurima)-[:REQUESTED_SUPPORT]->(noxus)
 
-// Query: who becomes vulnerable if Karath falls?
-MATCH (n)-[:DEPENDS_ON]->(k:Country {name: "Karath"})
+// Query: who becomes vulnerable if Shurima falls?
+MATCH (n)-[:DEPENDS_ON]->(k:Country {name: "Shurima"})
 RETURN n.name, n.dependency_score
 ```
 
 This enables queries like:
-- *Which actors are most exposed if Karath's regime collapses?*
-- *What is the shortest path of influence between Nexoria and Valdoria?*
+- *Which actors are most exposed if Shurima's regime collapses?*
+- *What is the shortest path of influence between noxus and Noxus?*
 - *Which red lines have been crossed this simulation?*
 
 ---
@@ -184,9 +183,9 @@ This enables queries like:
 warsim/
 ├── agents/
 │   ├── base_agent.py        # ReAct loop, memory, utility fn
-│   ├── valdoria.py
-│   ├── karath.py
-│   └── nexoria.py
+│   ├── Noxus.py
+│   ├── Shurima.py
+│   └── noxus.py
 ├── graph/
 │   ├── world_state.py       # LangGraph state definition
 │   ├── orchestrator.py      # Graph edges and flow
@@ -215,7 +214,7 @@ pip install -r requirements.txt
 export ANTHROPIC_API_KEY=your_key_here
 
 # Run a simulation
-python simulation.py --scenario "valdoria_attacks_karath" --turns 10
+python simulation.py --scenario "Noxus_attacks_Shurima" --turns 10
 ```
 
 ---
